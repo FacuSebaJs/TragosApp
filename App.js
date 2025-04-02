@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import { useEffect, useState } from 'react';
-import { isUserLoggedIn } from './utils/auth'; 
+import DrinksScreen from './screens/DrinksScreen';
 
-
+import { isSessionActive } from './utils/auth';
+import { CartProvider } from './screens/CartContext';
+import CartScreen from './screens/CartScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -17,23 +19,29 @@ export default function App() {
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const loggedIn = await isUserLoggedIn();
-      setInitialRoute(loggedIn ? 'Home' : 'Login');
+      const loggedIn = await isSessionActive();
+      setInitialRoute(loggedIn ? 'Drinks' : 'Login');
     };
-
     checkLoginStatus();
   }, []);
 
-  if (!initialRoute) return null; // o una pantalla de carga
+  if (!initialRoute) return null;
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
-  <Stack.Screen name="Login" component={LoginScreen} />
-  <Stack.Screen name="Home" component={HomeScreen} />
-  <Stack.Screen name="Register" component={RegisterScreen} />
+    <CartProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={initialRoute}>
+          <Stack.Screen name="Login" component={LoginScreen}options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={RegisterScreen}options={{ headerShown: false }} />
+          <Stack.Screen name="Home" component={HomeScreen}options={{ headerShown: false }} />
+          <Stack.Screen name="Drinks" component={DrinksScreen}options={{ headerShown: false }}  />
+          <Stack.Screen name="Cart" component={CartScreen}
 
-</Stack.Navigator>
-</NavigationContainer>
+          />
+
+        </Stack.Navigator>
+      </NavigationContainer>
+    </CartProvider>
   );
 }
+

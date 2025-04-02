@@ -15,6 +15,17 @@ export const logoutUser = async () => {
     console.log('Error al cerrar sesión', error);
   }
 };
+// Para App.js
+export const isSessionActive = async () => {
+  try {
+    const loggedIn = await AsyncStorage.getItem('isLoggedIn');
+    return loggedIn === 'true';
+  } catch (error) {
+    console.log('Error al verificar sesión activa', error);
+    return false;
+  }
+};
+
 
 export const isUserLoggedIn = async (username, password) => {
   try {

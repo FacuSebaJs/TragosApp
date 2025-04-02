@@ -23,7 +23,8 @@ export default function LoginScreen() {
     }
   
     await loginUser();
-    navigation.navigate('Home');
+    navigation.navigate('Drinks');
+
   };
 
   return (
